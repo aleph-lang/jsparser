@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 aleph-syntax-tree = { git = "ssh://git@github.com/aleph-lang/aleph-syntax-tree.git" }
-
+rslint_parser = "0.3.1"
