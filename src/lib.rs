@@ -3,7 +3,8 @@ use rslint_parser::{parse_text, SyntaxNode, SyntaxKind};
 
 fn is_operator(kind: SyntaxKind) -> bool {
     match kind {
-        SyntaxKind::PLUS | SyntaxKind::MINUS | SyntaxKind::STAR | SyntaxKind::SLASH => true,
+        SyntaxKind::PLUS | SyntaxKind::MINUS | SyntaxKind::STAR | SyntaxKind::SLASH 
+        | SyntaxKind::AMP | SyntaxKind::PIPE | SyntaxKind::BANG => true,
         _ => false
     }
 }
@@ -22,11 +23,31 @@ fn compute_stmt(node_list: Vec<at>) -> at {
 
 fn translate_ast(node: SyntaxNode) -> at {
     match node.kind() {
-        SyntaxKind::LITERAL | SyntaxKind::NAME_REF | SyntaxKind::NAME=> {
+        SyntaxKind::NAME_REF | SyntaxKind::NAME => {
             let name = node.text();
             at::Var{var: name.to_string(), is_pointer: "False".to_string()}
         }
-        SyntaxKind::SCRIPT | SyntaxKind::EXPR_STMT | SyntaxKind::BLOCK_STMT => {
+        SyntaxKind::LITERAL => {
+            let value = node.text();
+            let f = value.to_string().parse::<f64>();
+            match f {
+                Ok(_) => {
+                    let i = value.to_string().parse::<u64>();
+                    match i {
+                        Ok(_) => at::Int{value: value.to_string()},
+                        _ => at::Float{value: value.to_string()}
+                    }
+                },
+                _ => {
+                    match value.to_string().as_ref() {
+                        "true" | "t" | "True" | "TRUE" => at::Bool{value: "True".to_string()},
+                        "false" | "f" | "False" | "FALSE" => at::Bool{value: "False".to_string()},
+                        _ => at::Var{var: value.to_string(), is_pointer: "False".to_string()}
+                    }
+                }
+            }
+        }
+        SyntaxKind::SCRIPT | SyntaxKind::EXPR_STMT | SyntaxKind::BLOCK_STMT | SyntaxKind::GROUPING_EXPR => {
             compute_stmt(node.children().map(translate_ast).collect())
         }
         SyntaxKind::RETURN_STMT => {
@@ -44,6 +65,7 @@ fn translate_ast(node: SyntaxNode) -> at {
                 .collect();
             match operator {
                 SyntaxKind::MINUS => at::Neg{expr: Box::new(operands[0].clone())},
+                SyntaxKind::BANG => at::Not{bool_expr: Box::new(operands[0].clone())},
                 _ => at::String{value : "Unknown".to_string()}
             }
         }
@@ -62,6 +84,8 @@ fn translate_ast(node: SyntaxNode) -> at {
                 SyntaxKind::MINUS => at::Sub{number_expr1: Box::new(operands[0].clone()), number_expr2: Box::new(operands[1].clone())},
                 SyntaxKind::STAR => at::Mul{number_expr1: Box::new(operands[0].clone()), number_expr2: Box::new(operands[1].clone())},
                 SyntaxKind::SLASH => at::Div{number_expr1: Box::new(operands[0].clone()), number_expr2: Box::new(operands[1].clone())},
+                SyntaxKind::AMP => at::And{bool_expr1: Box::new(operands[0].clone()), bool_expr2: Box::new(operands[1].clone())},
+                SyntaxKind::PIPE => at::Or{bool_expr1: Box::new(operands[0].clone()), bool_expr2: Box::new(operands[1].clone())},
                 _ => at::String{value : "Unknown".to_string()}
             }
         }
