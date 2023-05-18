@@ -193,15 +193,55 @@ fn translate_ast(node: SyntaxNode) -> at {
         sk::SEMICOLON | sk::COMMA | sk::L_PAREN | sk::R_PAREN | sk::L_CURLY | sk::R_CURLY | sk::BANG
             | sk::L_BRACK | sk::R_BRACK | sk::L_ANGLE | sk::R_ANGLE | sk::TILDE | sk::QUESTION | sk::QUESTION2
             | sk::PLUS | sk::MINUS | sk::STAR | sk::SLASH | sk::EQ | sk::EQ2 | sk::EQ3 | sk::NEQ | sk::NEQ2 
-            | sk::AMP | sk::PIPE | sk::QUESTIONDOT | sk::PLUS2 | sk::STAR2 => {
+            | sk::DOT2 | sk::COLON | sk::FAT_ARROW | sk::MINUS2 | sk::LTEQ | sk::GTEQ | sk::PLUSEQ | sk::MINUSEQ | sk::PIPEEQ | sk::AMPEQ
+            | sk::CARETEQ | sk::SLASHEQ | sk::STAREQ | sk::PERCENTEQ | sk::AMP2 | sk::PIPE2 | sk::SHL | sk::SHR
+            | sk::USHR | sk::SHLEQ | sk::SHREQ | sk::USHREQ | sk::AMP2EQ | sk::PIPE2EQ | sk::STAR2EQ | sk::QUESTION2EQ
+            | sk::AT | sk::AWAIT_KW | sk::BREAK_KW | sk::CASE_KW | sk::CATCH_KW | sk::CLASS_KW | sk::CONST_KW | sk::CONTINUE_KW
+            | sk::DEBUGGER_KW | sk::DEFAULT_KW | sk::DELETE_KW | sk::DO_KW | sk::ELSE_KW | sk::ENUM_KW | sk::EXPORT_KW
+            | sk::EXTENDS_KW | sk::FALSE_KW | sk::FINALLY_KW | sk::FOR_KW | sk::FUNCTION_KW | sk::IF_KW | sk::IN_KW | sk::INSTANCEOF_KW
+            | sk::INTERFACE_KW | sk::IMPORT_KW | sk::IMPLEMENTS_KW | sk::NEW_KW | sk::NULL_KW | sk::PACKAGE_KW | sk::PRIVATE_KW
+            | sk::PROTECTED_KW | sk::PUBLIC_KW | sk::RETURN_KW | sk::SUPER_KW | sk::SWITCH_KW | sk::THIS_KW | sk::THROW_KW
+            | sk::TRY_KW | sk::TRUE_KW | sk::TYPEOF_KW | sk::VAR_KW | sk::VOID_KW | sk::WHILE_KW | sk::WITH_KW | sk::YIELD_KW
+            | sk::READONLY_KW | sk::KEYOF_KW | sk::UNIQUE_KW | sk::DECLARE_KW | sk::ABSTRACT_KW | sk::STATIC_KW | sk::ASYNC_KW
+            | sk::TYPE_KW | sk::FROM_KW | sk::AS_KW | sk::REQUIRE_KW | sk::NAMESPACE_KW | sk::ASSERT_KW | sk::MODULE_KW | sk::GLOBAL_KW
+            | sk::INFER_KW | sk::GET_KW | sk::SET_KW | sk::NUMBER | sk::STRING | sk::REGEX | sk::HASH | sk::TEMPLATE_CHUNK
+            | sk::DOLLARCURLY | sk::BACKTICK | sk::ERROR_TOKEN | sk::IDENT | sk::WHITESPACE | sk::COMMENT | sk::SHEBANG
+            | sk::MODULE | sk::ERROR | sk::DECLARATOR
+            | sk::DO_WHILE_STMT | sk::WHILE_STMT | sk::FOR_STMT | sk::FOR_IN_STMT | sk::CONTINUE_STMT | sk::BREAK_STMT
+            | sk::WITH_STMT | sk::SWITCH_STMT | sk::CASE_CLAUSE | sk::DEFAULT_CLAUSE | sk::LABELLED_STMT
+            | sk::THROW_STMT | sk::TRY_STMT | sk::CATCH_CLAUSE | sk::FINALIZER | sk::DEBUGGER_STMT
+            | sk::PARAMETER_LIST | sk::THIS_EXPR | sk::ARRAY_EXPR | sk::OBJECT_EXPR | sk::LITERAL_PROP | sk::GETTER
+            | sk::SETTER | sk::NEW_EXPR | sk::FN_EXPR | sk::BRACKET_EXPR
+            | sk::COND_EXPR | sk::SEQUENCE_EXPR | sk::ARG_LIST
+            | sk::TEMPLATE | sk::TEMPLATE_ELEMENT | sk::SPREAD_ELEMENT | sk::SUPER_CALL | sk::IMPORT_CALL
+            | sk::NEW_TARGET | sk::IMPORT_META | sk::IDENT_PROP | sk::SPREAD_PROP | sk::INITIALIZED_PROP | sk::OBJECT_PATTERN
+            | sk::ARRAY_PATTERN | sk::ASSIGN_PATTERN | sk::REST_PATTERN | sk::KEY_VALUE_PATTERN | sk::COMPUTED_PROPERTY_NAME
+            | sk::FOR_OF_STMT | sk::SINGLE_PATTERN | sk::ARROW_EXPR | sk::YIELD_EXPR | sk::CLASS_DECL | sk::CLASS_EXPR
+            | sk::CLASS_BODY | sk::METHOD | sk::IMPORT_DECL | sk::EXPORT_DECL | sk::EXPORT_NAMED | sk::EXPORT_DEFAULT_DECL
+            | sk::EXPORT_DEFAULT_EXPR | sk::EXPORT_WILDCARD | sk::WILDCARD_IMPORT | sk::NAMED_IMPORTS | sk::SPECIFIER
+            | sk::AWAIT_EXPR | sk::FOR_STMT_TEST | sk::FOR_STMT_UPDATE | sk::FOR_STMT_INIT | sk::PRIVATE_NAME
+            | sk::CLASS_PROP | sk::PRIVATE_PROP | sk::CONSTRUCTOR | sk::CONSTRUCTOR_PARAMETERS| sk::PRIVATE_PROP_ACCESS
+            | sk::IMPORT_STRING_SPECIFIER | sk::EXPR_PATTERN | sk::TS_ANY | sk::TS_UNKNOWN | sk::TS_NUMBER | sk::TS_OBJECT
+            | sk::TS_BOOLEAN | sk::TS_BIGINT | sk::TS_STRING | sk::TS_SYMBOL | sk::TS_VOID | sk::TS_UNDEFINED | sk::TS_NULL
+            | sk::TS_NEVER | sk::TS_THIS | sk::TS_LITERAL | sk::TS_PREDICATE | sk::TS_TUPLE | sk::TS_TUPLE_ELEMENT | sk::TS_PAREN
+            | sk::TS_TYPE_REF | sk::TS_QUALIFIED_PATH | sk::TS_TYPE_NAME | sk::TS_TEMPLATE | sk::TS_TEMPLATE_ELEMENT
+            | sk::TS_MAPPED_TYPE | sk::TS_MAPPED_TYPE_PARAM | sk::TS_MAPPED_TYPE_READONLY | sk::TS_TYPE_QUERY | sk::TS_TYPE_QUERY_EXPR
+            | sk::TS_IMPORT | sk::TS_TYPE_ARGS | sk::TS_ARRAY | sk::TS_INDEXED_ARRAY | sk::TS_TYPE_OPERATOR| sk::TS_INTERSECTION
+            | sk::TS_UNION | sk::TS_TYPE_PARAMS | sk::TS_FN_TYPE | sk::TS_CONSTRUCTOR_TYPE | sk::TS_EXTENDS | sk::TS_CONDITIONAL_TYPE
+            | sk::TS_CONSTRAINT | sk::TS_DEFAULT | sk::TS_TYPE_PARAM | sk::TS_NON_NULL | sk::TS_ASSERTION | sk::TS_CONST_ASSERTION
+            | sk::TS_ENUM | sk::TS_ENUM_MEMBER | sk::TS_TYPE_ALIAS_DECL | sk::TS_NAMESPACE_DECL | sk::TS_MODULE_BLOCK
+            | sk::TS_MODULE_DECL | sk::TS_CONSTRUCTOR_PARAM | sk::TS_CALL_SIGNATURE_DECL | sk::TS_CONSTRUCT_SIGNATURE_DECL
+            | sk::TS_INDEX_SIGNATURE | sk::TS_METHOD_SIGNATURE | sk::TS_PROPERTY_SIGNATURE | sk::TS_INTERFACE_DECL | sk::TS_ACCESSIBILITY
+            | sk::TS_OBJECT_TYPE | sk::TS_EXPR_WITH_TYPE_ARGS | sk::TS_IMPORT_EQUALS_DECL | sk::TS_MODULE_REF | sk::TS_EXTERNAL_MODULE_REF
+            | sk::TS_EXPORT_ASSIGNMENT | sk::TS_NAMESPACE_EXPORT_DECL | sk::TS_DECORATOR | sk::TS_INFER
+            | sk::AMP | sk::PIPE | sk::QUESTIONDOT | sk::PLUS2 | sk::STAR2 | sk::CARET | sk::PERCENT | sk::DOT => {
                 println!("Found ignoring node {:?}", node.kind());
                 at::String{value: "Ignore_node".to_string()}
-
             }
         _ => {
-            println!("Found other node {:?}", node.kind());
-            at::String{value: "Unknown_node".to_string()}
-        }
+          println!("Found other node {:?}", node.kind());
+          at::String{value: "Unknown_node".to_string()}
+          }
     }
 }
 
