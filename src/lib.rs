@@ -190,6 +190,14 @@ fn translate_ast(node: SyntaxNode) -> at {
                 translate_ast(condition)
             } else { todo!() }
         }
+        sk::SEMICOLON | sk::COMMA | sk::L_PAREN | sk::R_PAREN | sk::L_CURLY | sk::R_CURLY | sk::BANG
+            | sk::L_BRACK | sk::R_BRACK | sk::L_ANGLE | sk::R_ANGLE | sk::TILDE | sk::QUESTION | sk::QUESTION2
+            | sk::PLUS | sk::MINUS | sk::STAR | sk::SLASH | sk::EQ | sk::EQ2 | sk::EQ3 | sk::NEQ | sk::NEQ2 
+            | sk::AMP | sk::PIPE | sk::QUESTIONDOT | sk::PLUS2 | sk::STAR2 => {
+                println!("Found ignoring node {:?}", node.kind());
+                at::String{value: "Ignore_node".to_string()}
+
+            }
         _ => {
             println!("Found other node {:?}", node.kind());
             at::String{value: "Unknown_node".to_string()}
