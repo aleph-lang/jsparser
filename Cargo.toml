@@ -2,7 +2,10 @@
 name = "js_parser"
 version = "0.1.0"
 edition = "2021"
+license-file="LICENSE"
+repository="https://github.com/aleph-lang/jsparser"
+description="Javascript Parser : generate Aleph Syntax Tree."
 
 [dependencies]
-aleph-syntax-tree = { git = "ssh://git@github.com/aleph-lang/aleph-syntax-tree.git" }
+aleph-syntax-tree = "0.1.0"
 rslint_parser = "0.3.1"
