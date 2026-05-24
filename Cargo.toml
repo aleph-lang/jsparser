@@ -1,11 +1,11 @@
 [package]
 name = "js_parser"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license-file="LICENSE"
 repository="https://github.com/aleph-lang/jsparser"
 description="Javascript Parser : generate Aleph Syntax Tree."
 
 [dependencies]
-aleph-syntax-tree = "0.1.4"
+aleph-syntax-tree = "0.1.5"
 rslint_parser = "0.3.1"
